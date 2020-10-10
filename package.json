@@ -1,171 +1,177 @@
 {
-  "name": "anki",
-  "displayName": "Anki for VSCode",
-  "description": "Sync notes with your locally running Anki",
-  "version": "1.0.0",
-  "publisher": "jasew",
-  "engines": {
-    "vscode": "^1.47.0"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/jasonwilliams/anki"
-  },
-  "categories": [
-    "Notebooks",
-    "Other"
-  ],
-  "activationEvents": [
-    "onCommand:anki.sync",
-    "onCommand:anki.sendToStandalone",
-    "onCommand:anki.sendToDeck",
-    "onView:decks"
-  ],
-  "main": "./out/extension.js",
-  "icon": "anki-icon.png",
-  "contributes": {
-    "commands": [
-      {
-        "command": "anki.sync",
-        "title": "Anki: Sync Anki"
-      },
-      {
-        "command": "anki.sendToDeck",
-        "title": "Anki: Send To Deck",
-        "enablement": "editorLangId == markdown"
-      },
-      {
-        "command": "anki.sendToStandalone",
-        "title": "Anki: Send To Own Deck",
-        "enablement": "editorLangId == markdown"
-      },
-      {
-        "command": "anki.forceInstall",
-        "title": "Anki: Force Re-install"
-      }
-    ],
-    "views": {
-      "explorer": [
-        {
-          "id": "decks",
-          "name": "Anki Decks"
-        }
-      ]
-    },
-    "markdown.markdownItPlugins": true,
-    "configuration": {
-      "title": "Anki",
-      "properties": {
-        "anki.api.hostname": {
-          "type": "string",
-          "default": "127.0.0.1",
-          "description": "API Hostname"
-        },
-        "anki.api.port": {
-          "type": "number",
-          "default": 8765,
-          "description": "API Port"
-        },
-        "anki.api.schema": {
-          "type": "string",
-          "default": "http",
-          "description": "http or https"
-        },
-        "anki.defaultDeck": {
-          "type": "string",
-          "default": "notes",
-          "description": "Set's default deck when pushing from Markdown"
-        },
-        "anki.log": {
-          "type": "string",
-          "default": "error",
-          "description": "Logging level, defaults to error",
-          "enum": [
-            "off",
-            "error",
-            "warn",
-            "info",
-            "trace"
-          ]
-        },
-        "anki.md.card.separator": {
-          "type": "string",
-          "default": "(?=^##\\s)",
-          "description": "Regex for card separator"
-        },
-        "anki.md.card.frontBackSeparator": {
-          "type": "string",
-          "default": "%",
-          "description": "Text to match to split the front and back (not regex)"
-        },
-        "anki.md.card.tagPattern": {
-          "type": "string",
-          "default": "^\\[#(.*)\\]",
-          "description": "Regex for tags"
-        },
-        "anki.md.deck.titleSeparator": {
-          "type": "string",
-          "default": "^#\\s",
-          "description": "Parsing for Deck Name"
-        },
-        "anki.md.createTagForTitle": {
-          "type": "boolean",
-          "default": true,
-          "description": "When you run 'Send To Deck' the title (h1) of the markdown file is stored as a tag. This is useful if you have 'daily' notes, you can use the same deck but separate cards by title"
-        }
-      }
-    }
-  },
-  "jest": {
-    "preset": "ts-jest",
-    "testEnvironment": "node"
-  },
-  "scripts": {
-    "compile": "webpack --mode production",
-    "lint": "eslint src --ext ts",
-    "watch": "webpack --mode development --watch",
-    "test": "jest",
-    "test-compile": "tsc -p ./",
-    "vscode:prepublish": "webpack --mode production",
-    "webpack": "webpack --mode development",
-    "webpack-dev": "webpack --mode development --watch"
-  },
-  "devDependencies": {
-    "@types/cheerio": "^0.22.21",
-    "@types/glob": "^7.1.1",
-    "@types/jest-cli": "^24.3.0",
-    "@types/marked": "^1.1.0",
-    "@types/mocha": "^7.0.2",
-    "@types/node": "^13.11.0",
-    "@types/node-fetch": "^2.5.7",
-    "@types/prismjs": "^1.16.1",
-    "@types/semver": "^7.3.1",
-    "@types/vscode": "^1.47.0",
-    "@typescript-eslint/eslint-plugin": "^2.30.0",
-    "@typescript-eslint/parser": "^2.30.0",
-    "clean-webpack-plugin": "^3.0.0",
-    "css-loader": "^4.0.0",
-    "eslint": "^6.8.0",
-    "file-loader": "^6.0.0",
-    "glob": "^7.1.6",
-    "jest": "^26.4.2",
-    "jest-cli": "^26.4.2",
-    "mini-css-extract-plugin": "^0.9.0",
-    "node-sass": "^4.14.1",
-    "sass-loader": "^9.0.2",
-    "ts-jest": "^26.4.0",
-    "ts-loader": "^8.0.1",
-    "typescript": "^3.8.3",
-    "vscode-test": "^1.3.0",
-    "webpack": "^4.43.0",
-    "webpack-cli": "^3.3.12"
-  },
-  "dependencies": {
-    "@vscode-logging/logger": "^1.1.0",
-    "cheerio": "^1.0.0-rc.3",
-    "marked": "^1.1.1",
-    "node-fetch": "^2.6.1",
-    "prismjs": "^1.20.0",
-    "semver": "^7.3.2"
-  }
+	"name": "anki",
+	"displayName": "Anki for VSCode",
+	"description": "Sync notes with your locally running Anki",
+	"version": "1.0.0",
+	"publisher": "jasew",
+	"engines": {
+		"vscode": "^1.47.0"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/jasonwilliams/anki"
+	},
+	"categories": [
+		"Notebooks",
+		"Other"
+	],
+	"activationEvents": [
+		"onCommand:anki.sync",
+		"onCommand:anki.sendToStandalone",
+		"onCommand:anki.sendToDeck",
+		"onView:decks"
+	],
+	"main": "./out/extension.js",
+	"icon": "anki-icon.png",
+	"contributes": {
+		"commands": [
+			{
+				"command": "anki.sync",
+				"title": "Anki: Sync Anki"
+			},
+			{
+				"command": "anki.sendToDeck",
+				"title": "Anki: Send To Deck",
+				"enablement": "editorLangId == markdown"
+			},
+			{
+				"command": "anki.sendToStandalone",
+				"title": "Anki: Send To Own Deck",
+				"enablement": "editorLangId == markdown"
+			},
+			{
+				"command": "anki.forceInstall",
+				"title": "Anki: Force Re-install"
+			}
+		],
+		"views": {
+			"explorer": [
+				{
+					"id": "decks",
+					"name": "Anki Decks"
+				}
+			]
+		},
+		"markdown.markdownItPlugins": true,
+		"configuration": {
+			"title": "Anki",
+			"properties": {
+				"anki.api.hostname": {
+					"type": "string",
+					"default": "127.0.0.1",
+					"description": "API Hostname"
+				},
+				"anki.api.port": {
+					"type": "number",
+					"default": 8765,
+					"description": "API Port"
+				},
+				"anki.api.schema": {
+					"type": "string",
+					"default": "http",
+					"description": "http or https"
+				},
+				"anki.defaultDeck": {
+					"type": "string",
+					"default": "notes",
+					"description": "Set's default deck when pushing from Markdown"
+				},
+				"anki.log": {
+					"type": "string",
+					"default": "error",
+					"description": "Logging level, defaults to error",
+					"enum": [
+						"off",
+						"error",
+						"warn",
+						"info",
+						"trace"
+					]
+				},
+				"anki.md.card.separator": {
+					"type": "string",
+					"default": "(?=^##\\s)",
+					"description": "Regex for card separator"
+				},
+				"anki.md.card.frontBackSeparator": {
+					"type": "string",
+					"default": "%",
+					"description": "Text to match to split the front and back (not regex)"
+				},
+				"anki.md.card.tagPattern": {
+					"type": "string",
+					"default": "^\\[#(.*)\\]",
+					"description": "Regex for tags"
+				},
+				"anki.md.deck.titleSeparator": {
+					"type": "string",
+					"default": "^#\\s",
+					"description": "Parsing for Deck Name"
+				},
+				"anki.md.createTagForTitle": {
+					"type": "boolean",
+					"default": true,
+					"description": "When you run 'Send To Deck' the title (h1) of the markdown file is stored as a tag. This is useful if you have 'daily' notes, you can use the same deck but separate cards by title"
+				}
+			}
+		}
+	},
+	"jest": {
+		"preset": "ts-jest",
+		"testEnvironment": "node"
+	},
+	"scripts": {
+		"compile": "webpack --mode production",
+		"lint": "eslint src --ext ts",
+		"watch": "webpack --mode development --watch",
+		"test": "jest",
+		"test-compile": "tsc -p ./",
+		"vscode:prepublish": "webpack --mode production",
+		"webpack": "webpack --mode development",
+		"webpack-dev": "webpack --mode development --watch"
+	},
+	"devDependencies": {
+		"@types/cheerio": "^0.22.21",
+		"@types/glob": "^7.1.1",
+		"@types/jest-cli": "^24.3.0",
+		"@types/marked": "^1.1.0",
+		"@types/mocha": "^7.0.2",
+		"@types/node": "^13.11.0",
+		"@types/node-fetch": "^2.5.7",
+		"@types/prismjs": "^1.16.1",
+		"@types/semver": "^7.3.1",
+		"@types/vscode": "^1.47.0",
+		"@typescript-eslint/eslint-plugin": "^2.30.0",
+		"@typescript-eslint/parser": "^2.30.0",
+		"clean-webpack-plugin": "^3.0.0",
+		"css-loader": "^4.0.0",
+		"eslint": "^6.8.0",
+		"file-loader": "^6.0.0",
+		"glob": "^7.1.6",
+		"jest": "^26.4.2",
+		"jest-cli": "^26.4.2",
+		"mini-css-extract-plugin": "^0.9.0",
+		"node-sass": "^4.14.1",
+		"sass-loader": "^9.0.2",
+		"ts-jest": "^26.4.0",
+		"ts-loader": "^8.0.1",
+		"typescript": "^3.8.3",
+		"vscode-test": "^1.3.0",
+		"webpack": "^4.43.0",
+		"webpack-cli": "^3.3.12"
+	},
+	"dependencies": {
+		"@vscode-logging/logger": "^1.1.0",
+		"cheerio": "^1.0.0-rc.3",
+		"marked": "^1.1.1",
+		"nanoid": "^3.1.12",
+		"node-fetch": "^2.6.1",
+		"prismjs": "^1.20.0",
+		"semver": "^7.3.2"
+	},
+	"__metadata": {
+		"id": "58767951-324b-4078-af31-9aba38f0c189",
+		"publisherDisplayName": "Jason Williams",
+		"publisherId": "0b294493-63e9-456b-8da1-2b4f9ec10c57"
+	}
 }

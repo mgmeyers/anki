@@ -5,6 +5,7 @@ import { Card } from "./models/Card";
 import { getLogger } from "./logger";
 import { CONSTANTS } from "./constants";
 import { getAnkiState } from "./state";
+import { nanoid } from "nanoid";
 
 interface IResponse {
   result: any;
@@ -45,6 +46,10 @@ export class AnkiService {
   /** Synchronizes the local Anki collections with AnkiWeb. */
   async syncGui() {
     await this.invoke("sync");
+  }
+
+  async reloadCollection() {
+    await this.invoke("reloadCollection");
   }
 
   /**
@@ -139,7 +144,31 @@ export class AnkiService {
       };
     });
 
-    return await this.invoke("addNotes", { notes });
+    const canAdd: boolean[] = await this.invoke("canAddNotes", { notes });
+    
+    const toAdd: typeof notes = []
+    const toUpdate: typeof notes = []
+
+    canAdd.forEach((v: boolean, i: number) => {
+      if (v) {
+        toAdd.push(notes[i])
+      } else {
+        toUpdate.push(notes[i])
+      }
+    })
+
+    for (const note of toUpdate) {
+      const id: number[] = await this.invoke("findNotes", { query: `deck:"${note.deckName}" front:"${note.fields.Front}"` })
+
+      await this.invoke('updateNoteFields', {
+        note: {
+          id: id[0],
+          fields: note.fields
+        }
+      })
+    }
+
+    return await this.invoke("addNotes", { notes: toAdd });
   }
 
   async findCards(query: string): Promise<Card[]> {

@@ -49,7 +49,10 @@ export class Deck {
   async pushNewCardsToAnki() {
     const newCards = this.cards.filter((v) => !v.id);
     const ids = await this.ankiService?.addNotes(newCards);
+    
     ids?.map((v, i) => (newCards[i].id = v));
+    
+    await this.ankiService?.reloadCollection()
   }
 
   // Anki Service Methods

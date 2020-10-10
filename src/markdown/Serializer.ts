@@ -7,6 +7,7 @@ import { getLogger } from "../logger";
 import { Media } from "../models/Media";
 import path from "path";
 import fs from "fs";
+import { getQABlocks } from "../utils";
 
 interface ParsedData {
   /** DeckName can be null in which case we use the defaultDeck */
@@ -34,11 +35,8 @@ export class Serializer {
   }
 
   private async splitByCards(mdString: string): Promise<ParsedData> {
-    let rawCards = mdString
-      .split(new RegExp(this.getConfig("card.separator") as string, "m"))
-      .map((line) => line.trim());
-
-    const deckName = this.deckName(rawCards);
+    const titleMatch = mdString.match(/#\s+([^\n]+)/)
+    const deckName = titleMatch ? titleMatch[1] : ''
 
     // If we call "send to own deck" we need the title, if we don't have it error out here
     if (!deckName && this.useDefault === false) {
@@ -48,15 +46,7 @@ export class Serializer {
       throw new Error("Unable to parse title!");
     }
 
-    // filter out deck title
-    rawCards = rawCards.filter(
-      (str) =>
-        str.search(this.getConfig("deck.titleSeparator") as string) === -1
-    );
-
-    const parsedCards = await Promise.all(
-      rawCards.map((str) => new CardParser().parse(str))
-    );
+    const parsedCards = await getQABlocks(mdString)
     const cards = parsedCards
       // card should have at least a front side
       // Cloze cards don't need an answer side
@@ -70,28 +60,6 @@ export class Serializer {
       cards,
       media,
     };
-  }
-
-  deckName(rawCards: string[]): string | null {
-    const deckName = rawCards.reduce((acc, str) => {
-      const match = str.match(
-        new RegExp(this.getConfig("deck.titleSeparator") as string, "m")
-      );
-
-      if (match && match.input) {
-        // Handle frontmatter
-        // There could be frontmatter in this string, we need to slice it out, we can get the index of where the match happened and remove everything before
-        return match.input.slice(match.index);
-      }
-
-      return acc;
-    }, "");
-
-    if (!deckName) {
-      return null;
-    }
-
-    return deckName.replace(/(#\s|\n)/g, "");
   }
 
   /**

@@ -1,3 +1,6 @@
+import { MdParser } from "./markdown/parsers/mdParser";
+import { Card } from "./models/Card";
+
 /**
  * Trim string and replaces spaces with underscore
  * Used for making tags
@@ -42,3 +45,36 @@ export const trimArrayStart = (array: any[]) => {
  * Trim array
  */
 export const trimArray = (array: any[]) => trimArrayEnd(trimArrayStart(array));
+
+
+const QARegExp = /<!--[\s\n\r\t]*q:(?!front|back)([\w\W]+?)?-->([\w\W]+?)<!--[\s\n\r\t]*\/q[\s\n\r\t]*-->/g;
+const FBRegExp = /<!--[\s\n\r\t]*q:front[\s\n\r\t]*-->([\w\W]+?)<!--[\s\n\r\t]*\/q:front[\s\n\r\t]*-->[\s\n\r\t]*<!--[\s\n\r\t]*q:back[\s\n\r\t]*-->([\w\W]+?)<!--[\s\n\r\t]*\/q:back[\s\n\r\t]*-->/g 
+
+export async function getQABlocks(str: string) {
+  const cards: Card[] = []
+  const parser = new MdParser({})
+
+  let match: RegExpExecArray | null;
+
+  while ((match = QARegExp.exec(str)) !== null) {
+    const front = match[1].trim();
+    const back = match[2].trim();
+    
+    cards.push(new Card(
+      await parser.parse(front),
+      await parser.parse(back)
+    ))
+  }
+
+  while ((match = FBRegExp.exec(str)) !== null) {
+    const front = match[1].trim();
+    const back = match[2].trim();
+    
+    cards.push(new Card(
+      await parser.parse(front),
+      await parser.parse(back)
+    ))
+  }
+
+  return cards
+}
